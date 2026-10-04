@@ -1,0 +1,18 @@
+# environments and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.cache/
+.idea/
+
+# produced by the commands, or archived on Zenodo (see README)
+results/runs/
+results/locks/
+results/_failed/
+results/analysis/
+results_demo/
+data/external/openmeteo/era5/
+data/external/openmeteo/previous_runs/
+manuscript/
+logs/

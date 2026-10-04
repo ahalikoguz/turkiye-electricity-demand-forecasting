@@ -1,0 +1,161 @@
+# Experiment definitions for run_experiments.py.
+# A block expands to every combination of models x regimes x horizons x windows x seeds.
+# w is the input window in hours (0 for models that do not use a fixed window).
+
+training:            # shared by every trained model (NeuralForecast gets the same budget in its own units)
+  batch_size: 256
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  max_epochs: 90
+  early_stopping_patience: 10
+  scheduler_factor: 0.7
+  scheduler_patience: 4
+  scheduler_min_lr: 0.000001
+  gradient_clip_norm: 1.0
+  huber_delta: 1.0
+  use_amp: true
+
+tcn_models: &tcn [LightTCN_medium, LightTCN_large, ConcatTCN_medium, ConcatTCN_large,
+                  DualTCN_medium, DualTCN_large, DualTCN_Attn_medium, DualTCN_Attn_large]
+rnn_models: &rnn [LSTM, BiLSTM, CNN_LSTM]
+seeds_panel: &seeds5 [42, 123, 777, 2024, 3407]
+seeds_small: &seeds3 [42, 123, 777]
+
+# `windows: [selected]` = window chosen on the 2024 validation year for the model's past-only counterpart
+# (run `select-windows` after grid, long_horizon, nf_grid and foundation). Order of the whole study:
+#   baselines, lr_search -> select-lr -> grid, long_horizon, nf_grid, foundation, lightgbm -> select-windows
+#   -> panel, ablation, short_windows, publication_delay, regime_f, nf_f, lightgbm_f, foundation_f, vanilla,
+#      chronos_lora -> freeze -> evaluate
+
+experiments:
+  smoke:             # one run per model family, used with --demo to test the whole pipeline
+    blocks:
+      - {models: [LightTCN_medium, DualTCN_Attn_medium, LSTM], regimes: [cal], horizons: [24], windows: [168]}
+      - {models: [LightTCN_medium], regimes: [uni], horizons: [24], windows: [168]}
+      - {models: [Naive, SeasonalNaive, SeasonalNaiveWeekly], regimes: [uni], horizons: [24], windows: [0]}
+      - {models: [NF_NHITS, NF_TimeXer], regimes: [cal], horizons: [24], windows: [168]}
+      - {models: [NF_PatchTST, NF_iTransformer], regimes: [uni], horizons: [24], windows: [168]}
+      - {models: [Chronos2, TimesFM3, TiRex2], regimes: [uni, cal], horizons: [24], windows: [168]}
+      - {models: [LightGBM], regimes: [cal], horizons: [24], windows: [0]}
+
+  smoke_f:           # --demo: every component of the known-future and added experiments once
+    blocks:
+      - {models: [LightTCN_F_medium], regimes: [F0, F1, F1A0, F1A, F2, F34], horizons: [24], windows: [168]}
+      - {models: [NF_NHITS], regimes: [F0, F1], horizons: [24], windows: [168]}
+      - {models: [LightGBM], regimes: [F1A0, F1A, F34], horizons: [24], windows: [0]}
+      - {models: [Chronos2, TimesFM3, TiRex2], regimes: [F1A, F34], horizons: [24], windows: [168]}
+      - {models: [Vanilla, Vanilla_holiday], regimes: [F1, F34], horizons: [24], windows: [0]}
+      - {models: [LightTCN_medium], regimes: [cal], horizons: [24], windows: [168], gap: 2}
+      - {models: [LightGBM], regimes: [cal], horizons: [24], windows: [0], gap: 2}
+      - {models: [SeasonalNaive], regimes: [uni], horizons: [24], windows: [0], gap: 2}
+      - {models: [Chronos2_LoRA], regimes: [cal], horizons: [24], windows: [168]}
+      - {models: [LightTCN_medium], regimes: [cal_no_hour, cal_no_week, cal_no_holiday], horizons: [24], windows: [168]}
+
+  smoke_long:        # --demo: memory check of the longest window and horizon for every GPU family
+    blocks:
+      - {models: [LightTCN_large, DualTCN_Attn_large, LSTM, BiLSTM, CNN_LSTM], regimes: [cal], horizons: [720], windows: [2160]}
+      - {models: [NF_NHITS, NF_TimeXer], regimes: [cal], horizons: [720], windows: [2160]}
+      - {models: [NF_PatchTST, NF_iTransformer], regimes: [uni], horizons: [720], windows: [2160]}
+      - {models: [Chronos2, TimesFM3], regimes: [cal], horizons: [720], windows: [2160]}
+      - {models: [LightTCN_F_medium], regimes: [F1A], horizons: [720], windows: [2160]}
+      - {models: [Chronos2_LoRA], regimes: [cal], horizons: [720], windows: [2160]}
+
+  baselines:
+    blocks:
+      - {models: [Naive, SeasonalNaive, SeasonalNaiveWeekly], regimes: [uni], horizons: [1, 24, 168, 720], windows: [0]}
+
+  grid:              # single seed over the full window grid (window chosen later on the 2024 validation year)
+    blocks:
+      - {models: *tcn, regimes: [cal], horizons: [1, 24, 168], windows: [168, 336, 720]}
+      - {models: *rnn, regimes: [cal], horizons: [1, 24, 168], windows: [168, 336, 720]}
+      - {models: [LightTCN_medium, LightTCN_large], regimes: [uni], horizons: [1, 24, 168], windows: [168, 336, 720]}
+
+  long_horizon:
+    blocks:
+      - {models: *tcn, regimes: [cal], horizons: [720], windows: [1440, 2160]}
+      - {models: *rnn, regimes: [cal], horizons: [720], windows: [1440, 2160]}
+      - {models: [LightTCN_medium, LightTCN_large], regimes: [uni], horizons: [720], windows: [1440, 2160]}
+
+  nf_grid:
+    blocks:
+      - {models: [NF_NHITS, NF_TimeXer], regimes: [cal], horizons: [1, 24, 168], windows: [168, 336, 720]}
+      - {models: [NF_NHITS, NF_PatchTST, NF_iTransformer], regimes: [uni], horizons: [1, 24, 168], windows: [168, 336, 720]}
+      - {models: [NF_NHITS, NF_TimeXer], regimes: [cal], horizons: [720], windows: [1440, 2160]}
+      - {models: [NF_NHITS, NF_PatchTST, NF_iTransformer], regimes: [uni], horizons: [720], windows: [1440, 2160]}
+
+  foundation:        # zero-shot, inference only
+    blocks:
+      - {models: [Chronos2, TimesFM3, TiRex2], regimes: [uni, cal], horizons: [1, 24, 168], windows: [168, 336, 720]}
+      - {models: [Chronos2, TimesFM3], regimes: [uni, cal], horizons: [720], windows: [1440, 2160]}   # TiRex-2: max 320 steps
+
+  lightgbm:
+    blocks:
+      - {models: [LightGBM], regimes: [cal], horizons: [1, 24, 168, 720], windows: [0]}
+
+  lr_search:         # both learning rates at the reference cell; `select-lr` keeps the better one (validation) per model
+    blocks:
+      - {models: [LightTCN_medium, LightTCN_large, ConcatTCN_medium, ConcatTCN_large, DualTCN_medium, DualTCN_large,
+                  DualTCN_Attn_medium, DualTCN_Attn_large, LSTM, BiLSTM, CNN_LSTM],
+         regimes: [cal], horizons: [24], windows: [168], lr: [0.001, 0.0003]}
+      - {models: [NF_NHITS, NF_TimeXer], regimes: [cal], horizons: [24], windows: [168], lr: [0.001, 0.0003]}
+      - {models: [NF_PatchTST, NF_iTransformer], regimes: [uni], horizons: [24], windows: [168], lr: [0.001, 0.0003]}
+      - {models: [Chronos2_LoRA], regimes: [cal], horizons: [24], windows: [168], lr: [0.00001, 0.0001]}
+
+  panel:             # 5 seeds at the selected window (seed 42 is reused from the grid); H = 720: LightTCN + 2 rivals
+    blocks:
+      - {models: *tcn, regimes: [cal], horizons: [1, 24, 168], windows: [selected], seeds: *seeds5}
+      - {models: *rnn, regimes: [cal], horizons: [1, 24, 168], windows: [selected], seeds: *seeds5}
+      - {models: [LightTCN_medium, LightTCN_large], regimes: [uni], horizons: [1, 24, 168], windows: [selected], seeds: *seeds5}
+      - {models: [NF_NHITS, NF_TimeXer], regimes: [cal], horizons: [1, 24, 168], windows: [selected], seeds: *seeds5}
+      - {models: [NF_NHITS, NF_PatchTST, NF_iTransformer], regimes: [uni], horizons: [1, 24, 168], windows: [selected], seeds: *seeds5}
+      - {models: [LightGBM], regimes: [cal], horizons: [1, 24, 168], windows: [0], seeds: *seeds5}
+      - {models: [LightTCN_medium, LightTCN_large], regimes: [cal], horizons: [720], windows: [selected], seeds: *seeds5}
+      - {models: selected_h720_rivals, horizons: [720], windows: [selected], seeds: *seeds5}
+
+  ablation:          # one calendar group removed from `cal`; the full-calendar reference is in the panel
+    blocks:
+      - {models: [LightTCN_medium], regimes: [cal_no_hour, cal_no_week, cal_no_holiday], horizons: [24, 168], windows: [selected], seeds: *seeds3}
+
+  short_windows:     # very short inputs: accuracy-latency trade-off
+    blocks:
+      - {models: [LightTCN_medium, LightTCN_large], regimes: [cal], horizons: [1, 24], windows: [24, 48], seeds: *seeds3}
+
+  regime_f:          # LightTCN-F information ladder (window of LightTCN_medium, cal)
+    blocks:
+      - {models: [LightTCN_F_medium], regimes: [F0, F1, F1A], horizons: [1, 24, 168, 720], windows: [selected], seeds: *seeds3}
+      - {models: [LightTCN_F_medium], regimes: [F1A0, F2, F34], horizons: [24, 168], windows: [selected], seeds: *seeds3}
+
+  nf_f:              # N-HiTS with the known-future calendar; F0 = the same network with the future channels zeroed. No temperature arm: NF scales every input per window (PLAN 21)
+    blocks:
+      - {models: [NF_NHITS], regimes: [F0, F1], horizons: [1, 24, 168, 720], windows: [selected], seeds: *seeds3}
+
+  lightgbm_f:        # three seeds where the holiday-analog comparison is made (H = 24, 168), one elsewhere
+    blocks:
+      - {models: [LightGBM], regimes: [F0, F1, F1A], horizons: [1, 720], windows: [0]}
+      - {models: [LightGBM], regimes: [F0, F2, F34], horizons: [24, 168], windows: [0]}
+      - {models: [LightGBM], regimes: [F1, F1A0, F1A], horizons: [24, 168], windows: [0], seeds: *seeds3}
+
+  foundation_f:      # zero-shot with known-future covariates; their F0 is the `cal` run
+    blocks:
+      - {models: [Chronos2, TimesFM3, TiRex2], regimes: [F1, F1A], horizons: [1, 24, 168], windows: [selected]}
+      - {models: [Chronos2, TimesFM3], regimes: [F1, F1A], horizons: [720], windows: [selected]}
+      - {models: [Chronos2, TimesFM3, TiRex2], regimes: [F2, F34], horizons: [24, 168], windows: [selected]}
+
+  vanilla:           # Hong's Vanilla regression (no load lags), canonical and with a holiday dummy
+    blocks:
+      - {models: [Vanilla, Vanilla_holiday], regimes: [F1], horizons: [1, 24, 168, 720], windows: [0]}
+      - {models: [Vanilla, Vanilla_holiday], regimes: [F34], horizons: [24, 168], windows: [0]}
+
+  publication_delay: # EPİAŞ publishes an hour's load ~2 h after it ends: inputs stop at t-3 (gap 2)
+    blocks:
+      - {models: [LightTCN_medium], regimes: [cal], horizons: [1, 24], windows: [selected], seeds: *seeds3, gap: 2}
+      - {models: [LightGBM], regimes: [cal], horizons: [1, 24], windows: [0], gap: 2}
+      - {models: [Naive, SeasonalNaive, SeasonalNaiveWeekly], regimes: [uni], horizons: [1, 24], windows: [0], gap: 2}
+
+  chronos_lora:      # Chronos-2 fine-tuned (LoRA) on 2016-2023 at the Chronos-2 panel cells
+    blocks:
+      - {models: [Chronos2_LoRA], regimes: [cal], horizons: [1, 24, 168, 720], windows: [selected], seeds: *seeds3}
+
+# Every run that must exist, verified and current, before `freeze` (the smoke experiments are demos only).
+campaign: [baselines, lr_search, grid, long_horizon, nf_grid, foundation, lightgbm, panel, ablation, short_windows,
+           publication_delay, regime_f, nf_f, lightgbm_f, foundation_f, vanilla, chronos_lora]

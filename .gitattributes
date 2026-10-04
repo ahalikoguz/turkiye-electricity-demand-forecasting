@@ -1,0 +1,4 @@
+# Store every file byte for byte. The SHA-256 of the data, the configuration and the design notes is checked
+# (data/processed/data_report.json, data/*/SHA256SUMS, analyze_results.py), and several of them have CRLF line
+# endings, so git must not convert line endings on any platform.
+* -text

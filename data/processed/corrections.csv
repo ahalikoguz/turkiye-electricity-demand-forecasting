@@ -1,0 +1,3 @@
+raw_row,datetime_local,datetime_utc,action,old_value,new_value,reason
+2070,2016-03-27 04:00,2016-03-27T01:00Z,removed_duplicate_row,24776.94,,exact repetition of the previous row on the DST switch day; the second copy is removed
+2068,2016-03-27 02:00,2016-03-27T00:00Z,imputed_linear,0.0,25363.285,0 placeholder written by the export on the DST switch day; treated as missing and linearly interpolated from the neighbouring hours

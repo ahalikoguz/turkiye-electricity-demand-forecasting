@@ -1,0 +1,235 @@
+{
+  "created_utc": "2026-09-28T05:41:15+00:00",
+  "raw_file": {
+    "name": "epias_real_time_consumption_2016_2025.xlsx",
+    "sha256": "9d494c55deeed44142f0318c13a1bdc6aa2549255eafaa000142949d81ba2284",
+    "rows": 87672
+  },
+  "hard_checks": {
+    "continuous_hourly_utc": true,
+    "n_hours": 87671,
+    "n_hours_expected": 87671,
+    "roundtrip_local_utc_local": true,
+    "raw_values_preserved_except_ledger": true,
+    "total_balance_mwh": 0.0
+  },
+  "corrections": [
+    {
+      "raw_row": 2070,
+      "datetime_local": "2016-03-27 04:00",
+      "datetime_utc": "2016-03-27T01:00Z",
+      "action": "removed_duplicate_row",
+      "old_value": 24776.94,
+      "new_value": NaN,
+      "reason": "exact repetition of the previous row on the DST switch day; the second copy is removed"
+    },
+    {
+      "raw_row": 2068,
+      "datetime_local": "2016-03-27 02:00",
+      "datetime_utc": "2016-03-27T00:00Z",
+      "action": "imputed_linear",
+      "old_value": 0.0,
+      "new_value": 25363.285,
+      "reason": "0 placeholder written by the export on the DST switch day; treated as missing and linearly interpolated from the neighbouring hours"
+    }
+  ],
+  "per_year": {
+    "2016": {
+      "hours": 8783,
+      "min_mwh": 17796.48,
+      "mean_mwh": 31295.18,
+      "max_mwh": 44341.25,
+      "total_twh": 274.866
+    },
+    "2017": {
+      "hours": 8760,
+      "min_mwh": 18851.35,
+      "mean_mwh": 33102.19,
+      "max_mwh": 47062.4,
+      "total_twh": 289.975
+    },
+    "2018": {
+      "hours": 8760,
+      "min_mwh": 18497.35,
+      "mean_mwh": 33352.89,
+      "max_mwh": 45996.31,
+      "total_twh": 292.171
+    },
+    "2019": {
+      "hours": 8760,
+      "min_mwh": 18203.66,
+      "mean_mwh": 33156.04,
+      "max_mwh": 45346.05,
+      "total_twh": 290.447
+    },
+    "2020": {
+      "hours": 8784,
+      "min_mwh": 15333.3,
+      "mean_mwh": 33130.38,
+      "max_mwh": 49341.89,
+      "total_twh": 291.017
+    },
+    "2021": {
+      "hours": 8760,
+      "min_mwh": 20552.53,
+      "mean_mwh": 37305.33,
+      "max_mwh": 55575.02,
+      "total_twh": 326.795
+    },
+    "2022": {
+      "hours": 8760,
+      "min_mwh": 19209.2,
+      "mean_mwh": 36964.54,
+      "max_mwh": 51353.67,
+      "total_twh": 323.809
+    },
+    "2023": {
+      "hours": 8760,
+      "min_mwh": 19595.44,
+      "mean_mwh": 37023.17,
+      "max_mwh": 54044.88,
+      "total_twh": 324.323
+    },
+    "2024": {
+      "hours": 8784,
+      "min_mwh": 20062.44,
+      "mean_mwh": 39012.67,
+      "max_mwh": 57772.4,
+      "total_twh": 342.687
+    },
+    "2025": {
+      "hours": 8760,
+      "min_mwh": 21419.13,
+      "mean_mwh": 40244.56,
+      "max_mwh": 59503.67,
+      "total_twh": 352.542
+    }
+  },
+  "holiday_hours_by_year": {
+    "2016": 312,
+    "2017": 336,
+    "2018": 336,
+    "2019": 336,
+    "2020": 336,
+    "2021": 336,
+    "2022": 336,
+    "2023": 312,
+    "2024": 336,
+    "2025": 336
+  },
+  "plausibility": {
+    "midnight_jump_ratio_by_year": {
+      "2016": 1.007,
+      "2017": 0.973,
+      "2018": 1.01,
+      "2019": 1.006,
+      "2020": 1.014,
+      "2021": 0.965,
+      "2022": 0.987,
+      "2023": 0.992,
+      "2024": 0.983,
+      "2025": 1.015
+    },
+    "sunday_over_wednesday_by_year": {
+      "2016": 0.861,
+      "2017": 0.848,
+      "2018": 0.849,
+      "2019": 0.853,
+      "2020": 0.846,
+      "2021": 0.86,
+      "2022": 0.855,
+      "2023": 0.851,
+      "2024": 0.853,
+      "2025": 0.854
+    },
+    "religious_holiday_dip_pct": {
+      "Ramazan 2016": -33.9,
+      "Ramazan 2017": -27.7,
+      "Ramazan 2018": -28.1,
+      "Ramazan 2019": -34.1,
+      "Ramazan 2020": -29.7,
+      "Ramazan 2021": -26.1,
+      "Ramazan 2022": -33.0,
+      "Ramazan 2023": -27.7,
+      "Ramazan 2024": -34.4,
+      "Ramazan 2025": -28.5,
+      "Kurban 2016": -31.5,
+      "Kurban 2017": -27.8,
+      "Kurban 2018": -30.9,
+      "Kurban 2019": -24.1,
+      "Kurban 2020": -21.3,
+      "Kurban 2021": -26.7,
+      "Kurban 2022": -25.2,
+      "Kurban 2023": -28.3,
+      "Kurban 2024": -25.7,
+      "Kurban 2025": -26.7
+    },
+    "anchor_2024_07_09_total_mwh": 1145749.1
+  },
+  "weather": {
+    "status": "complete",
+    "population": {
+      "source": "TÜİK ADNKS 2022, bulletin 49685 (6 Feb 2023)",
+      "total": 85279553,
+      "sha256": "c5e6cb77005280673aeb9bc1ad5c73f5b36ef4f392d8b987f4c857ed674da7cb",
+      "largest_weights": [
+        [
+          "İstanbul",
+          0.1865
+        ],
+        [
+          "Ankara",
+          0.0678
+        ],
+        [
+          "İzmir",
+          0.0523
+        ],
+        [
+          "Bursa",
+          0.0375
+        ],
+        [
+          "Antalya",
+          0.0315
+        ]
+      ]
+    },
+    "forecast_first_complete_utc": {
+      "t2m_fc_d0_popw_c": "2024-02-03 00:00:00+00:00",
+      "t2m_fc_d1_popw_c": "2024-02-04 00:00:00+00:00",
+      "t2m_fc_d2_popw_c": "2024-02-05 00:00:00+00:00",
+      "t2m_fc_d3_popw_c": "2024-02-06 00:00:00+00:00",
+      "t2m_fc_d4_popw_c": "2024-02-07 00:00:00+00:00",
+      "t2m_fc_d5_popw_c": "2024-02-08 00:00:00+00:00",
+      "t2m_fc_d6_popw_c": "2024-02-09 00:00:00+00:00",
+      "t2m_fc_d7_popw_c": "2024-02-10 00:00:00+00:00"
+    }
+  },
+  "annual_mean_temperature_c": {
+    "2016": 15.92,
+    "2017": 15.52,
+    "2018": 16.71,
+    "2019": 16.21,
+    "2020": 16.34,
+    "2021": 16.14,
+    "2022": 15.79,
+    "2023": 16.52,
+    "2024": 16.95,
+    "2025": 16.48
+  },
+  "warnings": [],
+  "approved": true,
+  "outputs_sha256": {
+    "tr_load_hourly.csv": "c8bc7687ada35e1d17d546fac882bd31bbc6578bed4cd30e57ad1c75c2ab0540",
+    "corrections.csv": "00ddb5872eb780aa1bd1ad0911d2712501cf85a76489cd3c883837435d80f61a",
+    "tr_temperature_forecasts.csv": "e9aa8ff8d7821e25024e2720300b7b26ee334b6345eeb1b57a11c45fb30e2ef2"
+  },
+  "outputs_content_sha256": {
+    "tr_temperature_provinces.npz": "c9e7fb4e62b7fcac03574272bca49930bf5e2c0da6f71d218b094a1c985db09e"
+  },
+  "environment": {
+    "python": "3.12.10",
+    "pandas": "2.3.3"
+  }
+}

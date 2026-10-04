@@ -1,0 +1,12 @@
+# Data sources and provenance
+
+| File | Source | Licence / terms | Notes |
+|---|---|---|---|
+| `raw/epias_real_time_consumption_2016_2025.xlsx` | EPİAŞ Transparency Platform (seffaflik.epias.com.tr), "Gerçek Zamanlı Tüketim" (real-time consumption), hourly, 2016-01-01 to 2025-12-31 | EPİAŞ: content may be reproduced and used with attribution; data owner TEİAŞ | Cell contents as exported; read-only. On 2 Oct 2026 the document properties (author, last saved by, saved-file location) were cleared before release, which changed no cell; `raw/SHA256SUMS` holds the checksum of this file. Original local file name: `ridvan_veri_seti.xlsx`. |
+| `external/tuik_adnks_2022_province_population.xls` | TÜİK Veri Portalı, bulletin 49685 "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2022" (6 Feb 2023), table "İllere göre il/ilçe merkezi, belde/köy nüfusu ve yıllık nüfus artış hızı"; downloaded 27 Sep 2026 | TÜİK terms of use (attribution) | Province populations on 31 Dec 2022 used as fixed temperature weights; they sum to the published 85,279,553. On 2 Oct 2026 the user name stored in the file was blanked before release, which changed no cell. |
+| `external/provinces_geocoded.csv` | Open-Meteo Geocoding API (GeoNames data) | CC BY 4.0 (GeoNames) | Coordinates of the 81 province capitals (administrative seats). |
+| `external/openmeteo/era5/*.json` | Open-Meteo Historical Weather API, `models=era5` (Copernicus ERA5, doi:10.24381/cds.adbb2d47) | CC BY 4.0, "Weather data by Open-Meteo.com" | Hourly 2 m temperature, apparent temperature, relative humidity and shortwave radiation, UTC, 2015-12-31 to 2025-12-31. |
+| `external/openmeteo/previous_runs/*.json` | Open-Meteo Previous Runs API, `models=ecmwf_ifs025` (ECMWF IFS 0.25°) | CC BY 4.0, "Weather data by Open-Meteo.com" | Archived forecasts issued 1-7 days before the valid time, UTC, 2023-12-31 to 2025-12-31. |
+| `processed/tr_temperature_provinces.npz` | Derived by `prepare_data.py build` from the two Open-Meteo sources above | CC BY 4.0, "Weather data by Open-Meteo.com" | 2 m temperature of every province capital: ERA5 (hours x 81) and the archived forecasts issued 1-7 days earlier (7 x hours x 81), with the population weights. Used for the per-province bias correction; its content hash is in `processed/data_report.json`. |
+
+Every downloaded weather file is listed with its SHA-256 and request URL in `external/openmeteo/MANIFEST.csv`.

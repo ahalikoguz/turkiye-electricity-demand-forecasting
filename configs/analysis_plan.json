@@ -1,0 +1,1377 @@
+{
+ "basis": "validation year 2024 only; written before `freeze` and `evaluate`",
+ "created_utc": "2026-09-30T15:12:34+00:00",
+ "reported_cell": "every model at the window and learning rate selected on the validation year",
+ "loss": {
+  "primary": "absolute percentage error, averaged over the H leads of an origin and over the seeds (one value per hourly origin)",
+  "secondary": "squared error in MWh^2, averaged the same way"
+ },
+ "inference": {
+  "primary": "paired moving-block bootstrap of the mean loss difference, 95 % percentile interval",
+  "block_hours": "max(2 H, 168)",
+  "block_sensitivity": [
+   0.5,
+   2.0
+  ],
+  "resamples": 10000,
+  "rng_seed": 20260930,
+  "secondary": "Diebold-Mariano test with a HAC variance (lag H - 1) and the HLN correction",
+  "multiplicity": "Holm over the primary comparisons; effect sizes are always reported"
+ },
+ "primary_comparisons": [
+  {
+   "H": 1,
+   "question": "best TCN vs best rival, both with the past calendar",
+   "a": [
+    "LightTCN_large",
+    "cal"
+   ],
+   "b": [
+    "NF_NHITS",
+    "cal"
+   ]
+  },
+  {
+   "H": 1,
+   "question": "parameter-free attention read-out vs the same network without it",
+   "a": [
+    "DualTCN_Attn_medium",
+    "cal"
+   ],
+   "b": [
+    "DualTCN_medium",
+    "cal"
+   ]
+  },
+  {
+   "H": 1,
+   "question": "parameter-free attention read-out vs the same network without it",
+   "a": [
+    "DualTCN_Attn_large",
+    "cal"
+   ],
+   "b": [
+    "DualTCN_large",
+    "cal"
+   ]
+  },
+  {
+   "H": 24,
+   "question": "best TCN vs best rival, both with the past calendar",
+   "a": [
+    "LightTCN_large",
+    "cal"
+   ],
+   "b": [
+    "Chronos2_LoRA",
+    "cal"
+   ]
+  },
+  {
+   "H": 24,
+   "question": "parameter-free attention read-out vs the same network without it",
+   "a": [
+    "DualTCN_Attn_medium",
+    "cal"
+   ],
+   "b": [
+    "DualTCN_medium",
+    "cal"
+   ]
+  },
+  {
+   "H": 24,
+   "question": "parameter-free attention read-out vs the same network without it",
+   "a": [
+    "DualTCN_Attn_large",
+    "cal"
+   ],
+   "b": [
+    "DualTCN_large",
+    "cal"
+   ]
+  },
+  {
+   "H": 168,
+   "question": "best TCN vs best rival, both with the past calendar",
+   "a": [
+    "LightTCN_large",
+    "cal"
+   ],
+   "b": [
+    "Chronos2_LoRA",
+    "cal"
+   ]
+  },
+  {
+   "H": 168,
+   "question": "parameter-free attention read-out vs the same network without it",
+   "a": [
+    "DualTCN_Attn_medium",
+    "cal"
+   ],
+   "b": [
+    "DualTCN_medium",
+    "cal"
+   ]
+  },
+  {
+   "H": 168,
+   "question": "parameter-free attention read-out vs the same network without it",
+   "a": [
+    "DualTCN_Attn_large",
+    "cal"
+   ],
+   "b": [
+    "DualTCN_large",
+    "cal"
+   ]
+  },
+  {
+   "H": 720,
+   "question": "best LightTCN vs a validation-selected rival (five seeds each)",
+   "a": [
+    "LightTCN_large",
+    "cal"
+   ],
+   "b": [
+    "CNN_LSTM",
+    "cal"
+   ]
+  },
+  {
+   "H": 720,
+   "question": "best LightTCN vs a validation-selected rival (five seeds each)",
+   "a": [
+    "LightTCN_large",
+    "cal"
+   ],
+   "b": [
+    "NF_PatchTST",
+    "uni"
+   ]
+  }
+ ],
+ "secondary_comparisons": [
+  {
+   "H": 1,
+   "question": "best LightTCN vs best rival, both univariate",
+   "a": [
+    "LightTCN_medium",
+    "uni"
+   ],
+   "b": [
+    "NF_NHITS",
+    "uni"
+   ]
+  },
+  {
+   "H": 24,
+   "question": "best LightTCN vs best rival, both univariate",
+   "a": [
+    "LightTCN_large",
+    "uni"
+   ],
+   "b": [
+    "NF_NHITS",
+    "uni"
+   ]
+  },
+  {
+   "H": 168,
+   "question": "best LightTCN vs best rival, both univariate",
+   "a": [
+    "LightTCN_large",
+    "uni"
+   ],
+   "b": [
+    "NF_PatchTST",
+    "uni"
+   ]
+  }
+ ],
+ "information_contrasts": {
+  "models": [
+   "LightTCN_F_medium",
+   "LightGBM",
+   "NF_NHITS",
+   "Chronos2",
+   "TimesFM3",
+   "TiRex2"
+  ],
+  "contrasts": [
+   [
+    "F0",
+    "F1",
+    "calendar of the target hours"
+   ],
+   [
+    "F1",
+    "F1A0",
+    "holiday-analog flag alone"
+   ],
+   [
+    "F1A0",
+    "F1A",
+    "last year's holiday load, given the flag"
+   ],
+   [
+    "F1",
+    "F1A",
+    "holiday analog (flag and value)"
+   ],
+   [
+    "F1",
+    "F2",
+    "past temperature"
+   ],
+   [
+    "F2",
+    "F3",
+    "forecast temperature of the target hours (bias-corrected)"
+   ],
+   [
+    "F3raw_diag",
+    "F3",
+    "bias correction of the forecasts (same checkpoint)"
+   ],
+   [
+    "F3_m24",
+    "F3",
+    "12 h instead of 24 h vintage margin (same checkpoint)"
+   ],
+   [
+    "F3",
+    "F3_diag",
+    "observed instead of forecast future temperature (same checkpoint)"
+   ],
+   [
+    "F3",
+    "F4",
+    "oracle weather scenario instead of the realistic one"
+   ]
+  ],
+  "note": "a contrast is reported where both arms were run; the zero-shot models' F0 is their `cal` run on the same origins"
+ },
+ "ensemble": {
+  "rule": "unweighted mean of the seed-averaged forecasts of the best model of each family (TCN, RNN, NF, zero-shot foundation, LightGBM) on the validation year",
+  "members": {
+   "1": [
+    [
+     "LightTCN_large",
+     "cal"
+    ],
+    [
+     "BiLSTM",
+     "cal"
+    ],
+    [
+     "NF_NHITS",
+     "uni"
+    ],
+    [
+     "TimesFM3",
+     "cal"
+    ],
+    [
+     "LightGBM",
+     "cal"
+    ]
+   ],
+   "24": [
+    [
+     "LightTCN_large",
+     "cal"
+    ],
+    [
+     "BiLSTM",
+     "cal"
+    ],
+    [
+     "NF_NHITS",
+     "cal"
+    ],
+    [
+     "Chronos2",
+     "uni"
+    ],
+    [
+     "LightGBM",
+     "cal"
+    ]
+   ],
+   "168": [
+    [
+     "LightTCN_large",
+     "cal"
+    ],
+    [
+     "CNN_LSTM",
+     "cal"
+    ],
+    [
+     "NF_PatchTST",
+     "uni"
+    ],
+    [
+     "TimesFM3",
+     "cal"
+    ],
+    [
+     "LightGBM",
+     "cal"
+    ]
+   ],
+   "720": [
+    [
+     "LightTCN_large",
+     "uni"
+    ],
+    [
+     "BiLSTM",
+     "cal"
+    ],
+    [
+     "NF_PatchTST",
+     "uni"
+    ],
+    [
+     "TimesFM3",
+     "uni"
+    ],
+    [
+     "LightGBM",
+     "cal"
+    ]
+   ]
+  }
+ },
+ "validation_table": [
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "uni",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 0.5416
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "cal",
+   "H": 1,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 0.5499
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 0.565
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "cal",
+   "H": 1,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 0.5803
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "uni",
+   "H": 1,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 0.5916
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "uni",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 0.5964
+  },
+  {
+   "group": "NF",
+   "model": "NF_PatchTST",
+   "regime": "uni",
+   "H": 1,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 0.6045
+  },
+  {
+   "group": "foundation (LoRA)",
+   "model": "Chronos2_LoRA",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 3,
+   "val_MAPE": 0.6463
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_medium",
+   "regime": "cal",
+   "H": 1,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 0.6603
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_large",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 0.6759
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 0.6879
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "uni",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 0.6895
+  },
+  {
+   "group": "NF",
+   "model": "NF_iTransformer",
+   "regime": "uni",
+   "H": 1,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 0.7601
+  },
+  {
+   "group": "RNN",
+   "model": "BiLSTM",
+   "regime": "cal",
+   "H": 1,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 0.7747
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "uni",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 0.7963
+  },
+  {
+   "group": "RNN",
+   "model": "LSTM",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 0.8331
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 0.8439
+  },
+  {
+   "group": "foundation",
+   "model": "TiRex2",
+   "regime": "uni",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 0.9094
+  },
+  {
+   "group": "foundation",
+   "model": "TiRex2",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 0.912
+  },
+  {
+   "group": "NF",
+   "model": "NF_TimeXer",
+   "regime": "cal",
+   "H": 1,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 0.9129
+  },
+  {
+   "group": "LightGBM",
+   "model": "LightGBM",
+   "regime": "cal",
+   "H": 1,
+   "w": 0,
+   "n_seeds": 5,
+   "val_MAPE": 1.0206
+  },
+  {
+   "group": "RNN",
+   "model": "CNN_LSTM",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 1.0975
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_medium",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 1.2426
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_medium",
+   "regime": "cal",
+   "H": 1,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 1.2772
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_large",
+   "regime": "cal",
+   "H": 1,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 1.5762
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_large",
+   "regime": "cal",
+   "H": 1,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.9857
+  },
+  {
+   "group": "naive",
+   "model": "Naive",
+   "regime": "uni",
+   "H": 1,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 3.255
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaiveWeekly",
+   "regime": "uni",
+   "H": 1,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 5.4843
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaive",
+   "regime": "uni",
+   "H": 1,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 5.5826
+  },
+  {
+   "group": "foundation (LoRA)",
+   "model": "Chronos2_LoRA",
+   "regime": "cal",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 3,
+   "val_MAPE": 1.4146
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.4152
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.4749
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.4754
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "uni",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.4769
+  },
+  {
+   "group": "NF",
+   "model": "NF_PatchTST",
+   "regime": "uni",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.4996
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "uni",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 1.5101
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_medium",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.5217
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_large",
+   "regime": "cal",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 1.5313
+  },
+  {
+   "group": "NF",
+   "model": "NF_iTransformer",
+   "regime": "uni",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.5401
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "uni",
+   "H": 24,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 1.6009
+  },
+  {
+   "group": "NF",
+   "model": "NF_TimeXer",
+   "regime": "cal",
+   "H": 24,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 1.6996
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "uni",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 1.7502
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "cal",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 1.7704
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "cal",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 1.7711
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "uni",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 1.8059
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_medium",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.8363
+  },
+  {
+   "group": "RNN",
+   "model": "BiLSTM",
+   "regime": "cal",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 1.8599
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_medium",
+   "regime": "cal",
+   "H": 24,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 1.8704
+  },
+  {
+   "group": "RNN",
+   "model": "CNN_LSTM",
+   "regime": "cal",
+   "H": 24,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 1.8874
+  },
+  {
+   "group": "RNN",
+   "model": "LSTM",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 1.9713
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_large",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 2.0529
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_large",
+   "regime": "cal",
+   "H": 24,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 2.0854
+  },
+  {
+   "group": "LightGBM",
+   "model": "LightGBM",
+   "regime": "cal",
+   "H": 24,
+   "w": 0,
+   "n_seeds": 5,
+   "val_MAPE": 2.2502
+  },
+  {
+   "group": "foundation",
+   "model": "TiRex2",
+   "regime": "cal",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 2.2634
+  },
+  {
+   "group": "foundation",
+   "model": "TiRex2",
+   "regime": "uni",
+   "H": 24,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 2.2865
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaiveWeekly",
+   "regime": "uni",
+   "H": 24,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 5.4516
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaive",
+   "regime": "uni",
+   "H": 24,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 5.5755
+  },
+  {
+   "group": "naive",
+   "model": "Naive",
+   "regime": "uni",
+   "H": 24,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 14.0611
+  },
+  {
+   "group": "foundation (LoRA)",
+   "model": "Chronos2_LoRA",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 3,
+   "val_MAPE": 3.3235
+  },
+  {
+   "group": "NF",
+   "model": "NF_PatchTST",
+   "regime": "uni",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 3.3491
+  },
+  {
+   "group": "NF",
+   "model": "NF_iTransformer",
+   "regime": "uni",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 3.4287
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "cal",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 3.4852
+  },
+  {
+   "group": "NF",
+   "model": "NF_TimeXer",
+   "regime": "cal",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 3.5135
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.5787
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "uni",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.5992
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "cal",
+   "H": 168,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 3.6232
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_large",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.6674
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "uni",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.6711
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "uni",
+   "H": 168,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 3.6722
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_medium",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.7639
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 3.8075
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_large",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.8603
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_large",
+   "regime": "cal",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 3.8953
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_medium",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 5,
+   "val_MAPE": 3.9192
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "uni",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 3.9355
+  },
+  {
+   "group": "RNN",
+   "model": "CNN_LSTM",
+   "regime": "cal",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 4.0089
+  },
+  {
+   "group": "RNN",
+   "model": "BiLSTM",
+   "regime": "cal",
+   "H": 168,
+   "w": 336,
+   "n_seeds": 5,
+   "val_MAPE": 4.0192
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_medium",
+   "regime": "cal",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 4.0252
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 4.131
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "uni",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 4.2156
+  },
+  {
+   "group": "RNN",
+   "model": "LSTM",
+   "regime": "cal",
+   "H": 168,
+   "w": 168,
+   "n_seeds": 5,
+   "val_MAPE": 4.4005
+  },
+  {
+   "group": "LightGBM",
+   "model": "LightGBM",
+   "regime": "cal",
+   "H": 168,
+   "w": 0,
+   "n_seeds": 5,
+   "val_MAPE": 4.404
+  },
+  {
+   "group": "foundation",
+   "model": "TiRex2",
+   "regime": "cal",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 4.424
+  },
+  {
+   "group": "foundation",
+   "model": "TiRex2",
+   "regime": "uni",
+   "H": 168,
+   "w": 720,
+   "n_seeds": 1,
+   "val_MAPE": 4.4463
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaive",
+   "regime": "uni",
+   "H": 168,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 5.4657
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaiveWeekly",
+   "regime": "uni",
+   "H": 168,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 5.4657
+  },
+  {
+   "group": "naive",
+   "model": "Naive",
+   "regime": "uni",
+   "H": 168,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 16.0313
+  },
+  {
+   "group": "NF",
+   "model": "NF_PatchTST",
+   "regime": "uni",
+   "H": 720,
+   "w": 1440,
+   "n_seeds": 5,
+   "val_MAPE": 4.2193
+  },
+  {
+   "group": "foundation (LoRA)",
+   "model": "Chronos2_LoRA",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 3,
+   "val_MAPE": 4.2645
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "uni",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.29
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "uni",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.6378
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_medium",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.73
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_large",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.7484
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_large",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 5,
+   "val_MAPE": 4.8372
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_medium",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.8559
+  },
+  {
+   "group": "TCN",
+   "model": "ConcatTCN_large",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.8691
+  },
+  {
+   "group": "NF",
+   "model": "NF_iTransformer",
+   "regime": "uni",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 4.9003
+  },
+  {
+   "group": "TCN",
+   "model": "LightTCN_medium",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 5,
+   "val_MAPE": 5.0118
+  },
+  {
+   "group": "NF",
+   "model": "NF_TimeXer",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.08
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "uni",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.1398
+  },
+  {
+   "group": "RNN",
+   "model": "BiLSTM",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.3722
+  },
+  {
+   "group": "NF",
+   "model": "NF_NHITS",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.4255
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_large",
+   "regime": "cal",
+   "H": 720,
+   "w": 1440,
+   "n_seeds": 1,
+   "val_MAPE": 5.6284
+  },
+  {
+   "group": "TCN",
+   "model": "DualTCN_Attn_medium",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.8375
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "uni",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.8841
+  },
+  {
+   "group": "RNN",
+   "model": "CNN_LSTM",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 5,
+   "val_MAPE": 5.9115
+  },
+  {
+   "group": "foundation",
+   "model": "TimesFM3",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 5.9243
+  },
+  {
+   "group": "LightGBM",
+   "model": "LightGBM",
+   "regime": "cal",
+   "H": 720,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 6.1737
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 6.4137
+  },
+  {
+   "group": "RNN",
+   "model": "LSTM",
+   "regime": "cal",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 6.4638
+  },
+  {
+   "group": "foundation",
+   "model": "Chronos2",
+   "regime": "uni",
+   "H": 720,
+   "w": 2160,
+   "n_seeds": 1,
+   "val_MAPE": 6.7807
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaive",
+   "regime": "uni",
+   "H": 720,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 7.3847
+  },
+  {
+   "group": "naive",
+   "model": "SeasonalNaiveWeekly",
+   "regime": "uni",
+   "H": 720,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 7.3847
+  },
+  {
+   "group": "naive",
+   "model": "Naive",
+   "regime": "uni",
+   "H": 720,
+   "w": 0,
+   "n_seeds": 1,
+   "val_MAPE": 16.9792
+  }
+ ]
+}

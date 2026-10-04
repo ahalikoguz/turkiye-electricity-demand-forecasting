@@ -1,0 +1,20 @@
+# Top-level dependencies (human-edited). The exact resolved set is frozen in requirements-lock.txt.
+# torch is installed first from the PyTorch CUDA 12.8 index and pinned via constraints.txt.
+neuralforecast==3.2.2
+chronos-forecasting==2.3.2
+timesfm[torch]==3.0.2
+tirex-2==0.2.1
+peft                      # LoRA fine-tuning of Chronos-2
+lightgbm
+pandas
+openpyxl
+scipy
+statsmodels
+matplotlib
+captum
+pytest
+pyyaml
+requests
+huggingface_hub
+scikit-learn
+xlrd
