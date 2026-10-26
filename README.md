@@ -33,8 +33,7 @@ python -m pytest -q tests
 python run_experiments.py run --experiment baselines --devices auto
 ```
 
-The trained models, stored forecasts and raw weather files are archived on Zenodo (DOI to be added). The analysis
-commands of `analyze_results.py` need these files.
+The run records, stored forecasts, trained TCN, recurrent and Chronos-2 LoRA models and raw weather files are archived on Zenodo: https://doi.org/10.5281/zenodo.23143335. The LightGBM and NeuralForecast models are available from the authors on request. The analysis commands of analyze_results.py need these files.
 
 ## Notes
 
